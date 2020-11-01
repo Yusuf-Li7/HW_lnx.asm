@@ -1,0 +1,92 @@
+;Develop a program that calculates the
+;value of the ln(1-x) function for a specific 
+;parameter x using a power series with an accuracy of at least 0.1%
+;(use FPU)
+
+;variant 30
+
+format PE console
+entry start
+
+include 'win32a.inc'
+
+
+section '.code' code readable executable
+
+start:
+    invoke printf, textIn
+    invoke printf, formatFE
+    invoke scanf, formatFIn, x
+
+    ; ln(1-x) = ln(1+(-x))
+    fld  [x]
+    fchs
+    fstp  [a]
+
+    ; ln(1 + x) = x - x^2/2 + x^3/3 - ... | the expansion of Taylor
+
+    mov ebx, 1 ;cicle
+    lp:
+         fld    [an]
+         fmul   [a]
+         fstp   [an]
+
+         fld    [an]
+         fdiv   [b]
+         fmul   [tmp]
+         fstp   [c]
+
+         fld    [b]
+         fadd   [const]
+         fstp   [b]
+
+         fld    [sum]
+         fadd   [c]
+         fstp   [sum]
+
+         fld    [tmp]
+         fchs
+         fstp   [tmp]
+
+         add ebx, 1
+         cmp ebx, [n] ;cicle's long
+    jne lp
+
+    fld  [num]
+    fsub [x]
+    fst  [num]
+
+    invoke printf, formatF,     dword[num], dword[num+4],\
+                                dword[sum], dword[sum+4]
+
+    invoke getch
+    invoke ExitProcess, 0
+
+section '.data' data readable writable
+    textIn      db    "Enter x from (-1, 1) ", 0
+    formatFE    db    10, 13, 'x = ', 0
+    formatFIn   db    '%lf', 0
+    formatF     db    10, 13,'ln(1-x) = ln(%lf) = %lf', 0
+
+    x   dq      ?
+    a   dq      ?
+    an  dq      1.0f
+    b   dq      1.0f
+    c   dq      1.0f
+    const dq    1.0f
+    tmp dq      1.0f
+    n   dd      10000
+    num dq      1.0f
+    sum dq      0
+
+section '.idata' import data readable
+    library kernel, 'kernel32.dll',\
+            msvcrt, 'msvcrt.dll'
+
+    import kernel,\
+           ExitProcess, 'ExitProcess'
+    import msvcrt,\
+           printf, 'printf',\
+           sprintf, 'sprintf',\
+           scanf, 'scanf',\
+           getch, '_getch'
