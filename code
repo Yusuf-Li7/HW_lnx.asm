@@ -1,9 +1,9 @@
-;Develop a program that calculates the
-;value of the ln(1-x) function for a specific 
-;parameter x using a power series with an accuracy of at least 0.1%
-;(use FPU)
-
-;variant 30
+;Вариант 30
+;Разработать программу, вычисляющую с
+;помощью степенного ряда с точностью не
+;хуже 0,1% значение функции ln(1-x) для
+;конкретного параметра x (использовать
+;FPU)
 
 format PE console
 entry start
@@ -23,9 +23,9 @@ start:
     fchs
     fstp  [a]
 
-    ; ln(1 + x) = x - x^2/2 + x^3/3 - ... | the expansion of Taylor
+    ; ln(1 + x) = x - x^2/2 + x^3/3 - ... | разложение Тейлора
 
-    mov ebx, 1 ;cicle
+    mov ebx, 1 ;цикл
     lp:
          fld    [an]
          fmul   [a]
@@ -49,7 +49,7 @@ start:
          fstp   [tmp]
 
          add ebx, 1
-         cmp ebx, [n] ;cicle's long
+         cmp ebx, [n] ;длина цикла
     jne lp
 
     fld  [num]
