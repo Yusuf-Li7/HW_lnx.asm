@@ -1,6 +1,6 @@
-console example
+консольные примеры
 https://wampi.ru/image/RGOXTAg
 https://wampi.ru/image/RGOyLbr
 
-problem (условие задачи)
+условие задачи
 https://wampi.ru/image/RGeRJWf
